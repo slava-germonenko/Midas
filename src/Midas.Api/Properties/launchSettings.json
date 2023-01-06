@@ -1,0 +1,20 @@
+﻿{
+  "profiles": {
+    "http": {
+      "commandName": "Project",
+      "applicationUrl": "http://localhost:5000",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "AWS_REGION": "eu-central-1"
+      }
+    },
+    "https": {
+      "commandName": "Project",
+      "applicationUrl": "https://localhost:5001",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "AWS_REGION": "eu-central-1"
+      }
+    }
+  }
+}
