@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Common\Midas.Common.Collections\Midas.Common.Collections.csproj" />
+      <ProjectReference Include="..\..\Common\Midas.Common.Linq\Midas.Common.Linq.csproj" />
+      <ProjectReference Include="..\..\Midas.Core\Midas.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="12.0.0" />
+    </ItemGroup>
+
+</Project>
