@@ -9,7 +9,7 @@ using Midas.Users.Core.Services;
 namespace Midas.Api.Controllers;
 
 [ApiController, Route("users"), Authorize]
-public class UsersController : Controller
+public class UsersController : ControllerBase
 {
     private readonly IMapper _mapper;
 

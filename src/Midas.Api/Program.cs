@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Midas.Api.Middleware;
+using Midas.Auth.Core;
 using Midas.Auth.Core.Contracts;
 using Midas.Auth.Infrastructure.Contract;
 using Midas.Auth.Infrastructure.Options;
@@ -71,13 +72,15 @@ builder.Services.AddAutoMapper(
 );
 
 builder.Services.AddTransient<ExceptionsHandlingMiddleware>();
+builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<CreateUserService>();
 builder.Services.AddScoped<IPasswordHasher, Pbkdf2PasswordHasher>();
+builder.Services.AddScoped<IAccessTokenGenerator, AccessTokenGenerator>();
 builder.Services.AddScoped<IRefreshTokenGenerator, RefreshTokenGenerator>();
 builder.Services.AddDbContext<MidasContext>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("Core");
-    options.UseNpgsql(connectionString);
+    options.UseSnakeCaseNamingConvention().UseNpgsql(connectionString);
 
     if (builder.Environment.IsDevelopment())
     {
@@ -96,4 +99,5 @@ app.UseSwaggerUI(options =>
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<ExceptionsHandlingMiddleware>();
+app.MapControllers();
 app.Run();

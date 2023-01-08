@@ -4,8 +4,6 @@ namespace Midas.Core.Models;
 
 public class UserProperty
 {
-    public int UserId { get; set; }
-
     [Required(AllowEmptyStrings = false), StringLength(50)]
     public string Name { get; set; } = string.Empty;
 

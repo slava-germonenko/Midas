@@ -18,6 +18,7 @@ public class MidasContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.ApplyConfiguration(new UserEntityConfiguration());
         modelBuilder.ApplyConfiguration(new UserPropertyEntityConfiguration());
     }
 }

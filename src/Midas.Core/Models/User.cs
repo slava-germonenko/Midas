@@ -24,10 +24,10 @@ public class User
 
     public bool Active { get; set; }
 
-    [Required(AllowEmptyStrings = false), StringLength(400)]
+    [Required]
     public byte[] PasswordHash { get; set; } = Array.Empty<byte>();
 
-    [Required(AllowEmptyStrings = false), StringLength(400)]
+    [Required]
     public byte[] PasswordSalt { get; set; } = Array.Empty<byte>();
 
     public ICollection<UserProperty> DynamicProperties { get; set; } = new List<UserProperty>();

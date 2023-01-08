@@ -7,6 +7,7 @@ public class UserPropertyEntityConfiguration : IEntityTypeConfiguration<UserProp
 {
     public void Configure(EntityTypeBuilder<UserProperty> builder)
     {
-        builder.HasKey(up => new { up.Name, up.UserId });
+        builder.Property<int>("UserId");
+        builder.HasKey("Name", "UserId");
     }
 }
