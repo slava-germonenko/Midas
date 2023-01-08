@@ -1,7 +1,9 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Midas.Core;
+using Midas.Core.Contracts;
 using Midas.Core.Exceptions;
+using Midas.Core.Extensions;
 using Midas.Core.Models;
 using Midas.Users.Core.Constants;
 using Midas.Users.Core.Models;
@@ -12,11 +14,14 @@ public class CreateUserService
 {
     private readonly MidasContext _context;
 
+    private readonly IPasswordHasher _passwordHasher;
+
     private readonly IMapper _mapper;
 
-    public CreateUserService(MidasContext context, IMapper mapper)
+    public CreateUserService(MidasContext context, IPasswordHasher passwordHasher, IMapper mapper)
     {
         _context = context;
+        _passwordHasher = passwordHasher;
         _mapper = mapper;
     }
 
@@ -25,6 +30,8 @@ public class CreateUserService
         await EnsureUserCanBeCreatedAsync(userDto);
 
         var user = _mapper.Map<User>(userDto);
+        _passwordHasher.SetPassword(user, userDto.Password);
+
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
 

@@ -19,5 +19,8 @@ public record CreateUserDto
     [Required, RegularExpression(@"\w{11}")]
     public string Pesel { get; set; } = string.Empty;
 
+    [Required, StringLength(50, MinimumLength = 8)]
+    public string Password { get; set; } = string.Empty;
+
     public ICollection<UserPropertyDto> Properties { get; set; } = new List<UserPropertyDto>();
 };

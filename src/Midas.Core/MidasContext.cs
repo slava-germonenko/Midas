@@ -6,6 +6,8 @@ namespace Midas.Core;
 
 public class MidasContext : DbContext
 {
+    public DbSet<Session> Sessions => Set<Session>();
+
     public DbSet<User> Users => Set<User>();
 
     public DbSet<UserProperty> UserProperties => Set<UserProperty>();
