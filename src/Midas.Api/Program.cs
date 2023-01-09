@@ -4,13 +4,23 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Midas.Api.Middleware;
+using Midas.Auth.Core;
+using Midas.Auth.Core.Contracts;
+using Midas.Auth.Infrastructure.Contract;
+using Midas.Auth.Infrastructure.Options;
+using Midas.Common.HostedServices.Extensions;
 using Midas.Core;
+using Midas.Core.Contracts;
+using Midas.Infrastructure.Contracts;
+using Midas.Infrastructure.Options;
 using Midas.Users.Core.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddSystemsManager($"/Midas/{builder.Environment.EnvironmentName}");
 
+builder.Services.Configure<PasswordHashingOptions>(builder.Configuration.GetSection("Security:Passwords"));
+builder.Services.Configure<RefreshTokensOptions>(builder.Configuration.GetSection("Security:RefreshTokens"));
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -43,7 +53,7 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-var jwtSecret = builder.Configuration.GetValue<string>("Security:JwtSecret") ?? string.Empty;
+var jwtSecret = builder.Configuration.GetValue<string>("Security:AccessTokens:JwtSecret") ?? string.Empty;
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -63,11 +73,18 @@ builder.Services.AddAutoMapper(
 );
 
 builder.Services.AddTransient<ExceptionsHandlingMiddleware>();
+builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<CreateUserService>();
+builder.Services.AddScoped<IPasswordHasher, Pbkdf2PasswordHasher>();
+builder.Services.AddScoped<IAccessTokenGenerator, AccessTokenGenerator>();
+builder.Services.AddScoped<IRefreshTokenGenerator, RefreshTokenGenerator>();
+
+builder.Services.RegisterTimedHostedService<CleanupSessionsJob>(TimeSpan.FromMinutes(5));
+
 builder.Services.AddDbContext<MidasContext>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("Core");
-    options.UseNpgsql(connectionString);
+    options.UseSnakeCaseNamingConvention().UseNpgsql(connectionString);
 
     if (builder.Environment.IsDevelopment())
     {
@@ -86,4 +103,5 @@ app.UseSwaggerUI(options =>
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<ExceptionsHandlingMiddleware>();
+app.MapControllers();
 app.Run();

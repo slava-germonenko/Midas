@@ -6,6 +6,8 @@ namespace Midas.Core;
 
 public class MidasContext : DbContext
 {
+    public DbSet<Session> Sessions => Set<Session>();
+
     public DbSet<User> Users => Set<User>();
 
     public DbSet<UserProperty> UserProperties => Set<UserProperty>();
@@ -16,6 +18,7 @@ public class MidasContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.ApplyConfiguration(new UserEntityConfiguration());
         modelBuilder.ApplyConfiguration(new UserPropertyEntityConfiguration());
     }
 }
