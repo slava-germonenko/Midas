@@ -7,6 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\Common\Midas.Common.HostedServices\Midas.Common.HostedServices.csproj" />
       <ProjectReference Include="..\..\Midas.Core\Midas.Core.csproj" />
     </ItemGroup>
 

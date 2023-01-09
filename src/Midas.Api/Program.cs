@@ -8,6 +8,7 @@ using Midas.Auth.Core;
 using Midas.Auth.Core.Contracts;
 using Midas.Auth.Infrastructure.Contract;
 using Midas.Auth.Infrastructure.Options;
+using Midas.Common.HostedServices.Extensions;
 using Midas.Core;
 using Midas.Core.Contracts;
 using Midas.Infrastructure.Contracts;
@@ -77,6 +78,9 @@ builder.Services.AddScoped<CreateUserService>();
 builder.Services.AddScoped<IPasswordHasher, Pbkdf2PasswordHasher>();
 builder.Services.AddScoped<IAccessTokenGenerator, AccessTokenGenerator>();
 builder.Services.AddScoped<IRefreshTokenGenerator, RefreshTokenGenerator>();
+
+builder.Services.RegisterTimedHostedService<CleanupSessionsJob>(TimeSpan.FromMinutes(5));
+
 builder.Services.AddDbContext<MidasContext>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("Core");

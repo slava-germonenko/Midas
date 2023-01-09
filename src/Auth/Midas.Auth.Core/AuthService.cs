@@ -54,6 +54,13 @@ public class AuthService
         var session = await _context.Sessions
             .FirstOrDefaultAsync(s => s.UserId == user.Id && s.IpAddress.Equals(authRequest.IpAddress));
 
+        if (session?.ExpireDate <= DateTime.UtcNow)
+        {
+            _context.Sessions.Remove(session);
+            await _context.SaveChangesAsync();
+            session = null;
+        }
+
         if (session is null)
         {
             session = new Session
@@ -74,5 +81,22 @@ public class AuthService
         await _context.SaveChangesAsync();
 
         return (accessToken, refreshToken);
+    }
+
+    public async Task<(SecurityToken accessToken, SecurityToken refreshToken)> RefreshSessionAsync(string refreshToken)
+    {
+        var session = await _context.Sessions.FirstOrDefaultAsync(s => s.RefreshToken.Equals(refreshToken));
+        if (session is null || session.ExpireDate <= DateTime.UtcNow)
+        {
+            throw new CoreLogicException("Session has already expired.");
+        }
+
+        var newRefreshToken = _refreshTokenGenerator.Generate(session.UserId);
+        var newAccessToken = _accessTokenGenerator.Generate(session.UserId);
+
+        session.RefreshToken = newRefreshToken.Token;
+        session.ExpireDate = newRefreshToken.ExpireDate;
+
+        return (newAccessToken, newRefreshToken);
     }
 }

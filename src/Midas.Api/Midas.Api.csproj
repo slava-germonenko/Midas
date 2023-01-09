@@ -20,6 +20,7 @@
     <ItemGroup>
       <ProjectReference Include="..\Auth\Midas.Auth.Core\Midas.Auth.Core.csproj" />
       <ProjectReference Include="..\Auth\Midas.Auth.Infrastructure\Midas.Auth.Infrastructure.csproj" />
+      <ProjectReference Include="..\Common\Midas.Common.HostedServices\Midas.Common.HostedServices.csproj" />
       <ProjectReference Include="..\Midas.Infrastructure\Midas.Infrastructure.csproj" />
       <ProjectReference Include="..\Users\Midas.Users.Core\Midas.Users.Core.csproj" />
     </ItemGroup>
